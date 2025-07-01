@@ -22,6 +22,7 @@ Route::middleware('auth:api')->group(function () {
 
 Route::middleware('auth:api')->group(function () {
     Route::apiResource('tasks', TaskController::class);
+    Route::post('/{task}/attach', [TaskController::class, 'attachFile']);
 
     Route::patch('/tasks/{task}/complete', [TaskController::class, 'complete']);
     Route::get('/tasks/trashed', [TaskController::class, 'trashed']); // Untuk melihat task yang di-soft delete

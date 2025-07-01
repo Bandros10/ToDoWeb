@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Task;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
+use App\Http\Requests\StoreTaskAttachmentRequest;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class TaskController extends Controller
@@ -28,9 +30,7 @@ class TaskController extends Controller
      */
     public function store(StoreTaskRequest  $request)
     {
-        $task = $request->user()->tasks()->create(
-        $request->validated() + ['category_id' => $request->category_id]
-        );
+        $task = $request->user()->tasks()->create($request->validated());
         return response()->json($task, 201);
     }
 
@@ -72,4 +72,24 @@ class TaskController extends Controller
         ]);
         return $task;
     }
+
+    public function attachFile(StoreTaskAttachmentRequest $request, Task $task)
+    {
+        $this->authorize('update', $task);
+
+        $file = $request->file('attachment');
+        $fileName = time().'_'.Str::slug($file->getClientOriginalName());
+        $path = $file->storeAs('task_attachments', $fileName);
+
+        $task->update([
+            'attachment_path' => $path,
+            'attachment_name' => $file->getClientOriginalName()
+        ]);
+
+        return response()->json([
+            'message' => 'File attached successfully',
+            'attachment' => $task->only(['attachment_path', 'attachment_name'])
+        ]);
+    }
+
 }

@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreTaskRequest extends FormRequest
+class StoreTaskAttachmentRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,11 +22,12 @@ class StoreTaskRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'due_date' => 'nullable|date|after_or_equal:today',
-            'priority' => 'in:low,medium,high',
-            'category_id' => 'nullable|exists:categories,id'
+            'attachment' => [
+                'required',
+                'file',
+                'max:2048', // 2MB
+                'mimes:pdf,jpg,png,docx,xlsx'
+            ]
         ];
     }
 }
