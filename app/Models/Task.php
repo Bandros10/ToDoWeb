@@ -27,4 +27,9 @@ class Task extends Model
             $query->where('priority', $filters['priority']);
         }
     }
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class);
+    }
 }

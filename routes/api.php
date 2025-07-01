@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Api\TaskController;
+use App\Http\Controllers\Api\CategoryController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -25,6 +26,8 @@ Route::middleware('auth:api')->group(function () {
     Route::patch('/tasks/{task}/complete', [TaskController::class, 'complete']);
     Route::get('/tasks/trashed', [TaskController::class, 'trashed']); // Untuk melihat task yang di-soft delete
     Route::patch('/tasks/{task}/restore', [TaskController::class, 'restore']); // Restore task
+
+    Route::apiResource('categories', CategoryController::class);
 });
 
 

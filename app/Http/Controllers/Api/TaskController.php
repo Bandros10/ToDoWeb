@@ -28,7 +28,9 @@ class TaskController extends Controller
      */
     public function store(StoreTaskRequest  $request)
     {
-        $task = auth()->user()->tasks()->create($request->validated());
+        $task = $request->user()->tasks()->create(
+        $request->validated() + ['category_id' => $request->category_id]
+        );
         return response()->json($task, 201);
     }
 
